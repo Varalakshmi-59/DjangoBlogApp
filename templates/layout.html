@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Placeholder for custom CSS -->
+    <title>Ybblog</title>
+    <style>
+        /* Add some padding to the body for better spacing */
+        body {
+            padding-top: 70px;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    {% block styles %} {% endblock %}
+</head>
+<body>  
+    <!-- Include the navigation bar -->
+    {% include "includes/navbar.html" %}
+
+    <!-- Main container for content -->
+    <div class="container">
+        
+        <!-- Display messages if any -->
+        {% if messages %}
+            <div class="mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Block for dynamic content -->
+        {% block body %}
+        {% endblock body %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <p>&copy; {{ now|date:"Y" }} Ybblog. All rights reserved.</p>
+            <p>Powered by <a href="https://www.djangoproject.com/" target="_blank">Django</a> | Designed with <a href="https://getbootstrap.com/" target="_blank">Bootstrap</a></p>
+        </div>
+    </footer>
+    
+    <!-- Include required JavaScript files -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    {% block scripts %} {% endblock %}
+</body>
+</html>

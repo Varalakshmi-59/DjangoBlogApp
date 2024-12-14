@@ -1,0 +1,23 @@
+from django.contrib import admin
+from django.urls import path, include
+from django.conf.urls import handler400, handler500
+from . import views
+from rest_framework.routers import DefaultRouter
+from .api import ArticleViewSet
+
+router = DefaultRouter()
+router.register(r'articles', ArticleViewSet)
+
+app_name = "article"
+
+urlpatterns = [
+    path('dashboard/',views.dashboard,name = "dashboard"),
+    path('addarticle/',views.addArticle,name = "addarticle"),
+    path('article/<slug:slug>/',views.detail,name = "detail"),
+    path('update/<slug:slug>',views.updateArticle,name = "update"),
+    path('delete/<slug:slug>',views.deleteArticle,name = "delete"),
+    path('',views.articles,name = "articles"),
+    path('comment/<slug:slug>',views.addComment,name = "comment"),
+    # API URLs
+    path('api/', include(router.urls)),
+]

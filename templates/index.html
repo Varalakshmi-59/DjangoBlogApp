@@ -1,0 +1,183 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Hero Section -->
+<div class="hero-section text-center text-white">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1 class="display-4 mb-4">Software Science Blog</h1>
+        <p class="lead mb-4">A community-driven platform where developers share knowledge, experiences, and insights</p>
+        {% if request.user.is_authenticated %}
+            <div class="user-welcome mb-4">
+                <span class="badge badge-light">Welcome back, {{ request.user.username }}!</span>
+                <a href="{% url 'article:addarticle' %}" class="btn btn-primary ml-3">Write New Article</a>
+            </div>
+        {% else %}
+            <div class="cta-buttons">
+                <a href="{% url 'users:login' %}" class="btn btn-primary mr-3">Login</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-light">Join Community</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Featured Articles Section -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Latest Articles</h2>
+            <div class="row">
+                {% if articles %}
+                    {% for article in articles %}
+                        <div class="col-12 col-lg-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                {% if article.article_image %}
+                                    <a href="{% url 'article:detail' article.slug %}">
+                                        <img src="{{ article.article_image.url }}" class="card-img-top article-image" alt="{{ article.title }}">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <a href="{% url 'article:detail' article.slug %}" class="text-decoration-none">
+                                            <h3 class="card-title text-dark h5 mb-0">{{ article.title }}</h3>
+                                        </a>
+                                        <small class="text-muted">{{ article.created_date|date:"M d, Y" }}</small>
+                                    </div>
+                                    <p class="text-muted small mb-2">
+                                        <i class="fas fa-user-circle"></i> {{ article.author.username }}
+                                    </p>
+                                    <p class="card-text text-secondary flex-grow-1">
+                                        {{ article.content|safe|truncatewords:30 }}
+                                    </p>
+                                    <div class="mt-auto">
+                                        <a href="{% url 'article:detail' article.slug %}" class="btn btn-outline-primary btn-sm">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info text-center">
+                            <h4 class="alert-heading">No Articles Yet!</h4>
+                            <p>Be the first to share your knowledge with the community.</p>
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'article:addarticle' %}" class="btn btn-primary mt-2">Write First Article</a>
+                            {% else %}
+                                <a href="{% url 'users:login' %}" class="btn btn-primary mt-2">Login to Contribute</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Why Join Our Community?</h2>
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box p-4">
+                        <i class="fas fa-share-alt fa-2x mb-3 text-primary"></i>
+                        <h4>Share Knowledge</h4>
+                        <p>Share your experiences and help fellow developers grow</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box p-4">
+                        <i class="fas fa-users fa-2x mb-3 text-primary"></i>
+                        <h4>Connect</h4>
+                        <p>Connect with like-minded developers from around the world</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box p-4">
+                        <i class="fas fa-lightbulb fa-2x mb-3 text-primary"></i>
+                        <h4>Learn</h4>
+                        <p>Learn from real experiences and practical insights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+{% block styles %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        position: relative;
+        background: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center;
+        background-size: cover;
+        padding: 120px 0;
+        margin-bottom: 2rem;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Article Cards */
+    .article-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Feature Boxes */
+    .feature-box {
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* User Welcome Badge */
+    .user-welcome .badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 80px 0;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+
+        .lead {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+{% endblock styles %}

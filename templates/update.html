@@ -1,0 +1,228 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+
+<!-- Update Article Header -->
+<div class="article-update-header text-center py-5">
+    <div class="container">
+        <h1 class="display-4 mb-3">Update Article</h1>
+        <p class="lead text-muted">Refine and improve your content to better serve the developer community</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <!-- Main Form Card -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-lg-5">
+                    <!-- Article Status -->
+                    <div class="article-status mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-info-circle text-primary mr-2"></i>
+                            <h6 class="mb-0">Article Status</h6>
+                        </div>
+                        <div class="row status-grid">
+                            <div class="col-md-4">
+                                <div class="status-item">
+                                    <i class="fas fa-clock text-muted"></i>
+                                    <div class="status-details">
+                                        <span class="status-label">Last Updated</span>
+                                        <span class="status-value">{{ article.updated_at|date:"M d, Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="status-item">
+                                    <i class="fas fa-eye text-muted"></i>
+                                    <div class="status-details">
+                                        <span class="status-label">Views</span>
+                                        <span class="status-value">{{ article.views_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="status-item">
+                                    <i class="fas fa-comments text-muted"></i>
+                                    <div class="status-details">
+                                        <span class="status-label">Comments</span>
+                                        <span class="status-value">{{ article.comments_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr class="my-4">
+
+                    <!-- Article Form -->
+                    <form method="post" enctype="multipart/form-data" class="article-form">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        
+                        <div class="form-wrapper">
+                            {{ form|crispy }}
+                        </div>
+
+                        <div class="form-actions mt-4 d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                                <i class="fas fa-arrow-left mr-2"></i>Cancel
+                            </button>
+                            <div class="action-buttons">
+                                <button type="submit" name="action" value="draft" class="btn btn-light mr-2">
+                                    <i class="fas fa-save mr-2"></i>Save Draft
+                                </button>
+                                <button type="submit" name="action" value="update" class="btn btn-primary">
+                                    <i class="fas fa-check mr-2"></i>Update Article
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+{% block styles %}
+<style>
+    /* Header Styling */
+    .article-update-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 1rem;
+    }
+
+    /* Status Section Styling */
+    .article-status {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .status-item i {
+        margin-right: 1rem;
+        font-size: 1.25rem;
+        width: 20px;
+    }
+
+    .status-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .status-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .status-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    /* Form Styling */
+    .article-form label {
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .article-form .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .article-form .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.15);
+    }
+
+    /* Text Editor Customization */
+    .django-ckeditor-widget {
+        width: 100% !important;
+    }
+
+    /* Button Styling */
+    .btn {
+        padding: 0.5rem 1.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: #0066cc;
+        border-color: #0066cc;
+    }
+
+    .btn-primary:hover {
+        background-color: #0052a3;
+        border-color: #0052a3;
+    }
+
+    .btn-light {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    .btn-light:hover {
+        background-color: #e2e6ea;
+        border-color: #dae0e5;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch !important;
+        }
+
+        .action-buttons {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .action-buttons .btn {
+            margin: 0.5rem 0;
+            width: 100%;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .status-item {
+            margin-bottom: 1.5rem;
+        }
+    }
+</style>
+{% endblock styles %}

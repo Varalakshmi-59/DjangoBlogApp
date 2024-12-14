@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Banner Section -->
+<div class="banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-text text-center">
+        <h1 class="display-4 text-light">Welcome to Our Articles</h1>
+        <p class="lead text-light mb-0">Discover insights, stories, and updates</p>
+    </div>
+</div>
+
+<!-- Main Content Section -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center">
+                <h1 class="text-primary">Explore Articles</h1>
+                <p class="text-secondary">Stay informed with the latest updates and stories</p>
+                <hr class="my-4">
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <form class="d-flex">
+                {% csrf_token %}
+                <input type="text" name="keyword" class="form-control mr-2" maxlength="64" placeholder="Search articles...">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Articles Section -->
+    {% if articles %}
+        <div class="row mt-5">
+            {% for article in articles %}
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if article.article_image %}
+                            <a href="{% url 'article:detail' article.slug %}">
+                                <img src="{{ article.article_image.url }}" class="card-img-top article-image" alt="{{ article.title }}">
+                            </a>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <a href="{% url 'article:detail' article.slug %}" class="text-decoration-none">
+                                <h3 class="card-title text-dark h5">{{ article.title }}</h3>
+                            </a>
+                            <p class="text-muted small">
+                                Published by <strong>{{ article.author.username }}</strong> on {{ article.created_date }}
+                            </p>
+                            <p class="card-text text-secondary flex-grow-1">
+                                {{ article.content|safe|truncatewords:30 }}
+                            </p>
+                            <a href="{% url 'article:detail' article.slug %}" class="btn btn-primary mt-auto">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- No Articles Found Message -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="alert alert-warning text-center">
+                    <h4 class="alert-heading">No Articles Found</h4>
+                    <p>Try searching with a different keyword or check back later for new content.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock body %}
+
+{% block styles %}
+<style>
+    /* Banner Section */
+    .banner {
+        background: url('https://images.unsplash.com/photo-1516414447565-b14be0adf13e?ixlib=rb-1.2.1&auto=format&fit=crop&w=3000&q=80') no-repeat center center;
+        background-size: cover;
+        height: 500px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.6)
+        );
+    }
+
+    .banner-text {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        max-width: 800px;
+        color: #ffffff !important;
+    }
+
+    .banner-text h1 {
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 1rem;
+    }
+
+    .banner-text p {
+        font-size: 1.25rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Article Image Styling */
+    .article-image {
+        object-fit: cover;
+        height: 250px;
+        width: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    /* General Styling */
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        background: #ffffff;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .btn-primary {
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        border-radius: 5px;
+        background-color: #0066cc;
+        border-color: #0066cc;
+    }
+
+    .btn-primary:hover {
+        background-color: #0052a3;
+        border-color: #0052a3;
+    }
+
+    .form-control {
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.15);
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+        border-radius: 10px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .banner {
+            height: 400px;
+        }
+        
+        .banner-text h1 {
+            font-size: 2.5rem;
+        }
+        
+        .banner-text p {
+            font-size: 1.1rem;
+        }
+        
+        .article-image {
+            height: 200px;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .banner {
+            height: 300px;
+        }
+        
+        .banner-text h1 {
+            font-size: 2rem;
+        }
+        
+        .banner-text {
+            padding: 1rem;
+        }
+        
+        .form-control {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock styles %}
